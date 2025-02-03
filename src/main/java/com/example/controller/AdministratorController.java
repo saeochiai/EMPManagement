@@ -14,6 +14,7 @@ import com.example.form.InsertAdministratorForm;
 import com.example.form.LoginForm;
 import com.example.service.AdministratorService;
 
+import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 
 /**
@@ -98,18 +99,42 @@ public class AdministratorController {
 	 * 
 	 * @param form 管理者情報用フォーム
 	 * @return ログイン後の従業員一覧画面
-	 */
-	@PostMapping("/login")
-	public String login(LoginForm form, RedirectAttributes redirectAttributes) {
-		Administrator administrator = administratorService.login(form.getMailAddress(), form.getPassword());
-		if (administrator == null) {
-			redirectAttributes.addFlashAttribute("errorMessage", "メールアドレスまたはパスワードが不正です。");
-			return "redirect:/";
-		}
-		return "redirect:/employee/showList";
-	}
+	 * 
+	 * 
+	 * */
+	 @PostMapping("/login")
+	 public String login(LoginForm form, RedirectAttributes redirectAttributes, Model model) {
+        // 管理者の認証を行う
+        Administrator administrator = administratorService.login(form.getMailAddress(), form.getPassword());
+        
+        if (administrator == null) {
+            // ログイン失敗時にエラーメッセージをリダイレクト属性に追加
+            redirectAttributes.addFlashAttribute("errorMessage", "メールアドレスまたはパスワードが不正です。");
+            return "redirect:/"; // ログイン失敗時にリダイレクト
+        }
 
-	/////////////////////////////////////////////////////
+        // ログイン成功時にセッションに管理者名を保存
+        session.setAttribute("administratorName", administrator.getName());
+		System.out.println("セッションに保存された名前: " + session.getAttribute("administratorName"));
+		
+		model.addAttribute("administratorName", administrator.getName());
+
+        
+        return "redirect:/employee/showList"; // ログイン後に従業員一覧画面へリダイレクト
+    }
+
+			// @PostMapping("/login")
+			// public String login(LoginForm form, RedirectAttributes redirectAttributes) {
+			// 	Administrator administrator = administratorService.login(form.getMailAddress(), form.getPassword());
+			// 	if (administrator == null) {
+			// 		redirectAttributes.addFlashAttribute("errorMessage", "メールアドレスまたはパスワードが不正です。");
+			// 		return "redirect:/";
+			// 	}
+			// 	return "redirect:/employee/showList";
+			// }
+		
+			
+			/////////////////////////////////////////////////////
 	// ユースケース：ログアウトをする
 	/////////////////////////////////////////////////////
 	/**
