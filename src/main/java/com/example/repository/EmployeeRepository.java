@@ -44,7 +44,16 @@ public class EmployeeRepository {
 	@Autowired
 	private NamedParameterJdbcTemplate template;
 
-	 
+	public boolean isEmailDuplicate(String email) {
+        String sql = "SELECT COUNT(*) FROM employees WHERE mail_address = :email";
+        SqlParameterSource param = new MapSqlParameterSource().addValue("email", email);
+        
+        // 重複があれば1以上の件数が返る
+        int count = template.queryForObject(sql, param, Integer.class);
+        
+        return count > 0;  // 1以上の件数があれば重複あり
+    }
+	
 	//  @param searchQuery 部分一致させる名前
 	//  @return 一致する従業員のリスト
 	

@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import java.util.List;
 
 import com.example.domain.Employee;
 import com.example.form.UpdateEmployeeForm;
-import com.example.repository.EmployeeRepository;
 import com.example.service.EmployeeService;
 
 /**
@@ -37,7 +35,8 @@ public class EmployeeController {
        
 		List<Employee> employeeList = employeeService.searchEmployeesByName(searchQuery);
         model.addAttribute("employeeList", employeeList);
-        return "employee/list";  // 従業員一覧画面にリダイレクト
+		model.addAttribute("searchQuery", searchQuery); // 検索キーワードを保持
+		return "employee/list";  // 従業員一覧画面にリダイレクト
     }
 	
 

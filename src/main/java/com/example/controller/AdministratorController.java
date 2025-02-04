@@ -15,6 +15,9 @@ import com.example.form.LoginForm;
 import com.example.service.AdministratorService;
 
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+
 import jakarta.servlet.http.HttpSession;
 
 /**
@@ -26,6 +29,8 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/")
 public class AdministratorController {
+
+	
 
 	@Autowired
 	private AdministratorService administratorService;
@@ -73,12 +78,18 @@ public class AdministratorController {
 	 * @return ログイン画面へリダイレクト
 	 */
 	@PostMapping("/insert")
-	public String insert(InsertAdministratorForm form) {
-		Administrator administrator = new Administrator();
-		// フォームからドメインにプロパティ値をコピー
-		BeanUtils.copyProperties(form, administrator);
-		administratorService.insert(administrator);
-		return "employee/list";
+	public String insert(@Validated InsertAdministratorForm form, BindingResult result, RedirectAttributes redirectAttributes) {
+		try {
+			Administrator administrator = new Administrator();
+			// フォームからドメインにプロパティ値をコピー
+			BeanUtils.copyProperties(form, administrator);
+			administratorService.insert(administrator);
+		} catch (IllegalArgumentException e) {
+			// メールアドレス重複のエラーをキャッチしてリダイレクト時にエラーメッセージを渡す
+			redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+			return "redirect:/administrator/toInsert"; // エラー時に登録画面へリダイレクト
+		}
+		return "redirect:/employee/showList"; // 登録成功時に従業員一覧へリダイレクト
 	}
 
 	/////////////////////////////////////////////////////
@@ -123,18 +134,7 @@ public class AdministratorController {
         return "redirect:/employee/showList"; // ログイン後に従業員一覧画面へリダイレクト
     }
 
-			// @PostMapping("/login")
-			// public String login(LoginForm form, RedirectAttributes redirectAttributes) {
-			// 	Administrator administrator = administratorService.login(form.getMailAddress(), form.getPassword());
-			// 	if (administrator == null) {
-			// 		redirectAttributes.addFlashAttribute("errorMessage", "メールアドレスまたはパスワードが不正です。");
-			// 		return "redirect:/";
-			// 	}
-			// 	return "redirect:/employee/showList";
-			// }
-		
-			
-			/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////
 	// ユースケース：ログアウトをする
 	/////////////////////////////////////////////////////
 	/**

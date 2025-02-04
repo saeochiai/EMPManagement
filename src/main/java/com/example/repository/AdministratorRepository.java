@@ -3,6 +3,7 @@ package com.example.repository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -20,6 +21,9 @@ import com.example.domain.Administrator;
  */
 @Repository
 public class AdministratorRepository {
+
+		
+	
 
 	/**
 	 * Administratorオブジェクトを生成するローマッパー.
@@ -94,5 +98,16 @@ public class AdministratorRepository {
 		}
 		return administratorList.get(0);
 	}
+
+	@Autowired
+    private JdbcTemplate jdbcTemplate;
+
+	public boolean isEmailDuplicate(String mailAddress) {
+        String sql = "SELECT COUNT(*) FROM administrators WHERE mail_address = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{mailAddress}, Integer.class);
+        return count != null && count > 0;
+    }
+
+	
 
 }

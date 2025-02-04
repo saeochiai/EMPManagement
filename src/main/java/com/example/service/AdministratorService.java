@@ -26,8 +26,14 @@ public class AdministratorService {
 	 * @param administrator 管理者情報
 	 */
 	public void insert(Administrator administrator) {
+		if (isEmailDuplicate(administrator.getMailAddress())) {
+			throw new IllegalArgumentException("このメールアドレスは既に使用されています。");
+		}
 		administratorRepository.insert(administrator);
 	}
+	public boolean isEmailDuplicate(String mailAddress) {
+        return administratorRepository.isEmailDuplicate(mailAddress);
+    }
 
 	/**
 	 * ログインをします.
@@ -37,7 +43,6 @@ public class AdministratorService {
 	 * @return 管理者情報 存在しない場合はnullが返ります
 	 */
 	public Administrator login(String mailAddress, String password) {
-		Administrator administrator = administratorRepository.findByMailAddressAndPassward(mailAddress, password);
-		return administrator;
-	}
+        return administratorRepository.findByMailAddressAndPassward(mailAddress, password);
+    }
 }
