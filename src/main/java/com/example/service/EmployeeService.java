@@ -22,6 +22,11 @@ public class EmployeeService {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 
+	// 従業員の名前検索
+	public List<Employee> searchEmployeesByName(String searchQuery) {
+        return employeeRepository.searchEmployeesByName(searchQuery);
+    }
+
 	/**
 	 * 従業員情報を全件取得します.
 	 * 

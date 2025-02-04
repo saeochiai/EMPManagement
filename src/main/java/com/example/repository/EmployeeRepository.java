@@ -44,6 +44,23 @@ public class EmployeeRepository {
 	@Autowired
 	private NamedParameterJdbcTemplate template;
 
+	 
+	//  @param searchQuery 部分一致させる名前
+	//  @return 一致する従業員のリスト
+	
+   public List<Employee> searchEmployeesByName(String searchQuery) {
+	   String sql = "SELECT id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count " +
+					"FROM employees WHERE name LIKE :name";
+
+	   SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + searchQuery + "%");
+
+	   return template.query(sql, param, EMPLOYEE_ROW_MAPPER);
+   }
+
+		// 従業員名に部分一致するものを検索
+
+
+
 	/**
 	 * 従業員一覧情報を入社日順で取得します.
 	 * 
