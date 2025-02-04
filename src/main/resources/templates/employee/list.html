@@ -96,7 +96,7 @@
       
       <form action="#" method="get" th:action="@{/employee/search}" class="navbar-form navbar-left">
         <div class="form-group">
-            <input type="text" class="form-control" placeholder="従業員名で検索" name="searchQuery" id="searchQuery" />
+            <input type="text" class="form-control" placeholder="従業員名で検索" name="searchQuery" id="searchQuery" th:value="${searchQuery}"/>
         </div>
         <button type="submit" class="btn btn-default">検索</button>
     </form>

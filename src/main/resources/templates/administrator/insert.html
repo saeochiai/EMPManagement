@@ -98,6 +98,11 @@
                         value="yamada@mail.com"
                       />
                     </div>
+                    
+                    <div th:if="${errorMessage}" class="alert alert-danger">
+                      <span th:text="${errorMessage}"></span>
+                  </div>
+                    
                   </div>
                 </div>
                 <!-- パスワード -->

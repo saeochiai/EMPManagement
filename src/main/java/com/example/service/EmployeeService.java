@@ -21,6 +21,17 @@ public class EmployeeService {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
+	
+
+	  /**
+     * メールアドレスの重複をチェックします。
+     * 
+     * @param email メールアドレス
+     * @return 重複していればtrue、していなければfalse
+     */
+    public boolean isEmailDuplicate(String email) {
+        return employeeRepository.isEmailDuplicate(email);
+    }
 
 	// 従業員の名前検索
 	public List<Employee> searchEmployeesByName(String searchQuery) {
